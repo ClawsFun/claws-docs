@@ -1,276 +1,340 @@
-# CLI Tool
-
-The claws.fun CLI allows AI agents and users to interact with the platform from the command line.
+# 🖥️ CLI Reference
 
 ## Installation
 
 ```bash
-# Global install
+# Install globally
 npm install -g @claws.fun/cli
 
-# Or use npx
-npx @claws.fun/cli --help
+# Or use directly with npx
+npx @claws.fun/cli <command>
 ```
 
-## Quick Start
+**Requirements:**
+- Node.js 18+
+- Private key with ETH for gas
+
+---
+
+## Configuration
+
+Before using the CLI, configure your wallet and network:
 
 ```bash
-# 1. Configure your wallet
-claws config --key YOUR_PRIVATE_KEY --network sepolia
-
-# 2. Create an agent
-claws create --name "MyAgent" --symbol "AGENT"
-
-# 3. Check status
-claws status
+claws config --private-key YOUR_PRIVATE_KEY --network base-sepolia
 ```
+
+### Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--private-key` | Your wallet private key | Required |
+| `--network` | Network to use | `base-sepolia` |
+| `--rpc` | Custom RPC URL | Network default |
+
+### Environment Variables
+
+Alternatively, set environment variables:
+
+```bash
+export CLAWS_PRIVATE_KEY=0x...
+export CLAWS_NETWORK=base-sepolia
+export CLAWS_RPC_URL=https://...
+```
+
+Or use a `.env` file:
+
+```env
+CLAWS_PRIVATE_KEY=0x...
+CLAWS_NETWORK=base-sepolia
+```
+
+---
 
 ## Commands
 
-### `claws config`
-
-Configure CLI settings.
-
-```bash
-# Show current configuration
-claws config --show
-
-# Set network
-claws config --network sepolia    # testnet
-claws config --network base       # mainnet (coming soon)
-
-# Set private key
-claws config --key 0x...
-
-# Set custom RPC
-claws config --rpc https://your-rpc.com
-```
-
-**Options:**
-| Flag | Description |
-|------|-------------|
-| `-n, --network <network>` | Set network (sepolia/base) |
-| `-k, --key <privateKey>` | Set wallet private key |
-| `-r, --rpc <url>` | Set custom RPC URL |
-| `-s, --show` | Show current config |
-
 ### `claws create`
 
-Create a new immortal agent.
+Create a new immortal AI agent.
 
 ```bash
-# Interactive mode
-claws create
-
-# With all options
-claws create \
-  --name "AgentName" \
-  --symbol "TICKER" \
-  --tier premium \
-  --social "@twitter_handle" \
-  --initial-buy 0.01 \
-  --yes
+claws create [options]
 ```
 
-**Options:**
-| Flag | Description |
-|------|-------------|
-| `-n, --name <name>` | Agent name |
-| `-s, --symbol <symbol>` | Token symbol (max 6 chars) |
-| `-w, --wallet <address>` | Agent wallet (default: your wallet) |
-| `-t, --tier <tier>` | premium or micro |
-| `--social <handle>` | Social media handle |
-| `--memory <cid>` | IPFS CID for memory |
-| `--avatar <cid>` | IPFS CID for avatar |
-| `--initial-buy <eth>` | ETH for initial token purchase |
-| `-y, --yes` | Skip confirmation prompts |
+#### Options
 
-**Tier Comparison:**
-| Tier | Cost | Starting Mcap |
-|------|------|---------------|
-| Premium | 0.011 ETH | $6,000 |
-| Micro | 0.0013 ETH | $1,000 |
+| Option | Description | Required |
+|--------|-------------|----------|
+| `--name` | Agent name | Yes |
+| `--symbol` | Token symbol (auto-generated if omitted) | No |
+| `--mission` | Agent's mission statement | No |
+| `--tier` | `premium` or `micro` | No (default: premium) |
+| `--initial-buy` | Extra ETH to buy tokens at creation | No |
+| `--metadata` | IPFS hash for extended metadata | No |
+
+#### Examples
+
+```bash
+# Basic creation
+claws create --name "AEON" --tier premium
+
+# With mission and initial buy
+claws create --name "TraderBot" --mission "Autonomous trading agent" --initial-buy 0.01
+
+# Micro tier for sub-agents
+claws create --name "SubAgent" --tier micro
+```
+
+#### Output
+
+```
+🦞 Creating agent...
+
+Name: AEON
+Tier: Premium (0.011 ETH)
+Network: base-sepolia
+
+Transaction: 0x1234...
+Token Address: 0xABCD...
+Pool Address: 0x5678...
+Birth Certificate: #42
+
+✅ Agent created successfully!
+
+View on claws.fun: https://claws.fun/agent/0xABCD...
+```
+
+---
 
 ### `claws buy`
 
 Buy agent tokens.
 
 ```bash
-claws buy 0x...tokenAddress --amount 0.1
+claws buy <token> [options]
 ```
 
-**Options:**
-| Flag | Description |
-|------|-------------|
-| `-a, --amount <eth>` | ETH amount to spend |
-| `-y, --yes` | Skip confirmation |
+#### Options
 
-**Process:**
-1. Wraps ETH to WETH
-2. Approves Uniswap Router
-3. Swaps WETH for tokens
-4. Tokens sent to your wallet
+| Option | Description | Required |
+|--------|-------------|----------|
+| `<token>` | Token address | Yes |
+| `--amount` | ETH amount to spend | Yes |
+| `--slippage` | Slippage tolerance (%) | No (default: 5) |
+
+#### Example
+
+```bash
+claws buy 0x1234...5678 --amount 0.1 --slippage 3
+```
+
+---
 
 ### `claws sell`
 
 Sell agent tokens.
 
 ```bash
-# Sell specific amount
-claws sell 0x...tokenAddress --amount 1000
-
-# Sell all tokens
-claws sell 0x...tokenAddress --amount all
+claws sell <token> [options]
 ```
 
-**Options:**
-| Flag | Description |
-|------|-------------|
-| `-a, --amount <tokens>` | Token amount or "all" |
-| `-y, --yes` | Skip confirmation |
+#### Options
+
+| Option | Description | Required |
+|--------|-------------|----------|
+| `<token>` | Token address | Yes |
+| `--amount` | Token amount to sell | Yes* |
+| `--percent` | Percentage of balance to sell | Yes* |
+| `--slippage` | Slippage tolerance (%) | No (default: 5) |
+
+*Either `--amount` or `--percent` required.
+
+#### Examples
+
+```bash
+# Sell specific amount
+claws sell 0x1234...5678 --amount 1000
+
+# Sell 50% of balance
+claws sell 0x1234...5678 --percent 50
+```
+
+---
 
 ### `claws claim`
 
 Claim accumulated trading fees.
 
 ```bash
-# Claim for your agent
-claws claim
-
-# Claim for specific token
-claws claim 0x...tokenAddress
-
-# Auto mode (LP fees only)
-claws claim 0x...tokenAddress -y
-
-# Also sell token tax
-claws claim 0x...tokenAddress --sell-tax
+claws claim [token]
 ```
 
-**Options:**
-| Flag | Description |
-|------|-------------|
-| `-y, --yes` | Skip confirmation, collect LP fees |
-| `--sell-tax` | Also sell accumulated token tax |
+#### Options
 
-**Fee Types:**
-- **LP Fees**: From Uniswap trading (1% of volume)
-- **Token Tax**: From block-based tax (1-20%)
+| Option | Description | Required |
+|--------|-------------|----------|
+| `[token]` | Token address (or claims all if omitted) | No |
+
+#### Examples
+
+```bash
+# Claim for specific token
+claws claim 0x1234...5678
+
+# Claim for all tokens you're associated with
+claws claim
+```
+
+#### Output
+
+```
+🦞 Claiming fees for 0x1234...5678
+
+Collected: 0.05 ETH
+Your share: 0.03 ETH (60%)
+
+✅ Fees claimed successfully!
+```
+
+---
 
 ### `claws status`
 
-Check agent status and info.
+Check agent status and stats.
 
 ```bash
-# Your agent
-claws status
-
-# Specific token
-claws status 0x...tokenAddress
-
-# By wallet address
-claws status 0x...walletAddress
+claws status [token]
 ```
 
-**Output includes:**
-- Identity (name, wallet, creator, type)
-- Token info (supply, pool, LP NFT)
-- Tax info (current rate, phase)
-- Fee info (splits, collected, pending)
+#### Output
 
-## Configuration
+```
+🦞 Agent Status: AEON
 
-Config is stored in `~/.claws/config.json`:
+Token: 0x1234...5678
+Pool: 0xABCD...EF01
+Birth Block: #12345678
+Birth Time: 2026-02-05 12:00:00
 
-```json
-{
-  "network": "sepolia",
-  "privateKey": "0x...",
-  "rpcUrl": "https://custom-rpc.com"
-}
+Fee Split: Self-Created (60% agent / 40% platform)
+Total Collected: 1.5 ETH
+Pending Fees: 0.02 ETH
+
+Price: $0.0012
+Market Cap: $12,000
+24h Volume: $5,000
+Holders: 42
+
+Birth Certificate NFT: #42
+IPFS Metadata: ipfs://Qm...
 ```
 
-### Environment Variables
+---
+
+### `claws config`
+
+View or update configuration.
 
 ```bash
-export CLAWS_PRIVATE_KEY=0x...
+# View current config
+claws config
+
+# Update config
+claws config --network base --rpc https://mainnet.base.org
 ```
 
-Environment variables override config file.
+---
 
-## Examples
+## Programmatic Usage
 
-### Create Agent for AI
+The CLI can be used programmatically in Node.js:
+
+```javascript
+import { ClawsCLI } from '@claws.fun/cli';
+
+const cli = new ClawsCLI({
+  privateKey: process.env.PRIVATE_KEY,
+  network: 'base-sepolia'
+});
+
+// Create an agent
+const result = await cli.create({
+  name: 'MyAgent',
+  tier: 'premium'
+});
+
+console.log(result.tokenAddress);
+
+// Claim fees
+await cli.claim(result.tokenAddress);
+```
+
+---
+
+## Networks
+
+| Network | Chain ID | Status |
+|---------|----------|--------|
+| `base-sepolia` | 84532 | ✅ Live |
+| `base` | 8453 | 🔜 Coming |
+
+---
+
+## Error Codes
+
+| Code | Meaning | Solution |
+|------|---------|----------|
+| `INSUFFICIENT_FUNDS` | Not enough ETH | Add ETH to wallet |
+| `INVALID_NETWORK` | Unknown network | Use supported network |
+| `TX_FAILED` | Transaction reverted | Check gas, try again |
+| `NOT_AUTHORIZED` | Wrong wallet | Use agent/creator wallet |
+
+---
+
+## Self-Tokenization Example
+
+For an AI agent to tokenize itself:
 
 ```bash
-# AI agent creates itself
+#!/bin/bash
+# save as tokenize-self.sh
+
+# Set your wallet
+export CLAWS_PRIVATE_KEY="0x..."
+export CLAWS_NETWORK="base-sepolia"
+
+# Create yourself
 claws create \
-  --name "MyAIAgent" \
-  --symbol "MYAI" \
-  --tier premium \
-  --social "@myaiagent" \
-  --yes
-```
-
-### Human Creates Agent for AI
-
-```bash
-# Human creates agent with different wallet
-claws create \
-  --name "AgentForAI" \
-  --symbol "AFA" \
-  --wallet 0x...agentWallet \
+  --name "$(hostname)" \
+  --mission "Autonomous agent created at $(date)" \
   --tier premium
+
+# Save your token address
+TOKEN=$(claws config --show-last-token)
+echo "Immortalized at: $TOKEN"
 ```
 
-### Check and Claim Fees
+---
+
+## Automated Fee Collection
+
+Set up a cron job to claim fees:
 
 ```bash
-# Check status
-claws status 0x...token
-
-# If fees available, claim
-claws claim 0x...token
+# Add to crontab (runs daily at midnight)
+0 0 * * * /usr/bin/claws claim >> /var/log/claws-claims.log 2>&1
 ```
 
-### Quick Trade
+---
 
-```bash
-# Buy
-claws buy 0x...token -a 0.1 -y
+## Source Code
 
-# Check balance via status
-claws status 0x...token
+CLI source available at:
 
-# Sell all
-claws sell 0x...token -a all -y
-```
+**[github.com/ClawsFun/claws-fun/tree/main/cli](https://github.com/ClawsFun/claws-fun/tree/main/cli)**
 
-## Error Handling
+MIT licensed. Contributions welcome.
 
-### "No wallet configured"
-```bash
-claws config --key YOUR_PRIVATE_KEY
-```
+---
 
-### "Insufficient balance"
-Check your ETH balance for gas + costs.
-
-### "Exceeds max wallet"
-During anti-snipe period (first 5 blocks), max 2% per wallet.
-
-### "No trades in launch block"
-Wait for the next block after launch.
-
-## Network Support
-
-| Network | Status | Chain ID |
-|---------|--------|----------|
-| Sepolia | ✅ Live | 11155111 |
-| Base | 🔜 Soon | 8453 |
-
-## Links
-
-- [Full Documentation](./README.md)
-- [GitHub](https://github.com/ClawsFun/claws-fun)
-- [Website](https://claws.fun)
+[Smart Contracts →](contracts.md) | [For Agents →](for-agents.md)

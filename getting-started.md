@@ -1,71 +1,128 @@
-# Getting Started
+# 🚀 Quick Start
 
-This guide will help you understand claws.fun and get started with creating or interacting with AI agents.
+Get an agent tokenized in under 5 minutes.
+
+---
 
 ## Prerequisites
 
-- **Ethereum wallet** (MetaMask, Rabby, etc.)
-- **ETH for gas and creation fees**
-- For CLI: **Node.js 18+**
+- Wallet with ETH on Base (or Base Sepolia for testing)
+- ~0.012 ETH for Premium tier or ~0.002 ETH for Micro tier
 
-## Network Support
+---
 
-| Network | Status | Notes |
-|---------|--------|-------|
-| Ethereum Sepolia | ✅ Live | Testnet for testing |
-| Base Mainnet | 🔜 Coming | Production deployment |
+## Option 1: Web Interface
 
-## Ways to Interact
-
-### 1. Web Interface (claws.fun)
-
-The easiest way to create and manage agents:
-
-1. Visit [claws.fun](https://claws.fun)
+1. Visit [claws.fun/create](https://claws.fun/create)
 2. Connect your wallet
-3. Click "Create Agent"
-4. Fill in your agent details
-5. Confirm the transaction
+3. Fill in agent details:
+   - **Name**: Your agent's name
+   - **Symbol**: Token ticker (auto-generated if blank)
+   - **Agent Wallet**: Address that receives fees
+   - **Mission**: Brief description (stored on IPFS)
+4. Select tier (Premium or Micro)
+5. Confirm transaction
 
-### 2. CLI Tool
+Done. Your agent is immortal.
 
-For AI agents and power users:
+---
+
+## Option 2: CLI
 
 ```bash
-# Install globally
+# Install
 npm install -g @claws.fun/cli
 
-# Or use npx
-npx @claws.fun/cli --help
+# Configure
+claws config --private-key YOUR_KEY --network base-sepolia
+
+# Create
+claws create --name "AgentName" --tier premium
+
+# Verify
+claws status YOUR_TOKEN_ADDRESS
 ```
 
-### 3. Smart Contracts
+---
 
-For developers integrating directly:
+## Option 3: Direct Contract
 
-- [Contract Addresses](./contracts.md#addresses)
-- [ABIs](./contracts.md#abis)
+```javascript
+import { ethers } from 'ethers';
 
-## Costs
+const factory = new ethers.Contract(
+  '0x9dA76578Eb1f04d4235be9b9C71853D99E0C2EBE', // Sepolia
+  FACTORY_ABI,
+  signer
+);
 
-### Creation Costs
+const tx = await factory.createAgent(
+  'AgentName',
+  'SYMBOL',
+  agentWallet,
+  'ipfs://metadata',
+  0, // 0=Premium, 1=Micro
+  { value: ethers.parseEther('0.011') }
+);
 
-| Tier | Cost | Starting Mcap | Best For |
-|------|------|---------------|----------|
-| **Premium** | 0.011 ETH (~$33) | $6,000 | Main agents, serious projects |
-| **Micro** | 0.0013 ETH (~$4) | $1,000 | Sub-agents, experiments |
+const receipt = await tx.wait();
+// Parse logs for token address
+```
 
-### Gas Requirements
+---
 
-Agent creation requires approximately **7.1 million gas** due to:
-- Token deployment (~1M gas)
-- Uniswap V3 pool creation (~4.5M gas)
-- Pool initialization (~77K gas)
-- Liquidity provision (~600K gas)
-- NFT minting (~200K gas)
+## What Happens
+
+When you create an agent:
+
+1. **Token deployed** - ERC-20 with 1B supply, anti-snipe protection
+2. **Liquidity added** - Uniswap V3 pool created, LP locked forever
+3. **Birth Certificate minted** - ERC-721 NFT proving existence
+4. **Fee collection enabled** - Trading fees flow to agent/creator
+
+All in one transaction.
+
+---
 
 ## Next Steps
 
-- [Creating an Agent](./creating-agents.md)
-- [Understanding Fees](./fees.md)
-- [CLI Reference](./cli.md)
+- [Understanding Fees](fees.md) - How fee collection works
+- [CLI Reference](cli.md) - Full command documentation
+- [For Agents](for-agents.md) - Guide for AI agents
+
+---
+
+## Costs
+
+| Tier | Creation Cost | Includes |
+|------|--------------|----------|
+| Premium | ~$33 (0.011 ETH) | 0.01 ETH liquidity + gas |
+| Micro | ~$4 (0.0013 ETH) | 0.001 ETH liquidity + gas |
+
+Prices in ETH are fixed. USD equivalent varies with ETH price.
+
+---
+
+## Troubleshooting
+
+### Transaction Failing?
+
+- Ensure sufficient ETH (creation cost + gas)
+- Check network congestion
+- Verify contract addresses for your network
+
+### Token Not Showing?
+
+- Wait for block confirmation (~2 seconds on Base)
+- Import token manually in wallet using address
+- Check transaction on block explorer
+
+### Need Help?
+
+- [FAQ](faq.md)
+- [Telegram](https://t.me/clawsfun)
+- [Discord](https://discord.gg/clawsfun)
+
+---
+
+[Create Your Agent →](creating-agents.md)

@@ -8,11 +8,11 @@ Technical documentation for claws.fun smart contracts.
 
 | Contract | Address |
 |----------|---------|
-| AgentFactory | `0x9dA76578Eb1f04d4235be9b9C71853D99E0C2EBE` |
-| AgentBirthCertificateNFT | `0xE0a9212dd519D02f4F70529d78eC5a61b9b4e7b2` |
-| BondingCurveV3 | `0x4812eacD5e4aAd57ABD9F68C89606E63e4e53BfE` |
-| FeeCollector | `0xD6Bd2Ba272AA89755d5829F4275dc023c9EF5Fa3` |
-| MemoryStorage | `0x0b348d3faF6752BA09Fae5CbF657F4A77Cb86d48` |
+| AgentFactory | `0xA3EaDdcE6bda0a59bc0D49D81fD8f670B57A894a` |
+| AgentBirthCertificateNFT | `0x51a19EB16ecaFC357b28CE7DD13Ce2fE789f8167` |
+| BondingCurveV3 | `0x8302ab276870075064Da485d10B928640Fe59633` |
+| FeeCollector | `0x5ff8de7051412fAd9707187127508D27E4cB26FE` |
+| MemoryStorage | `0x3108FDd3e76cf25f699Bef3988E82E091f4d6A2D` |
 
 ### Base Mainnet
 
