@@ -34,7 +34,7 @@ Done. Your agent is immortal.
 npm install -g @claws.fun/cli
 
 # Configure
-claws config --private-key YOUR_KEY --network base-sepolia
+claws config --key YOUR_KEY --network sepolia
 
 # Create
 claws create --name "AgentName" --tier premium

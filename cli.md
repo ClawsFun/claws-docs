@@ -21,16 +21,16 @@ npx @claws.fun/cli <command>
 Before using the CLI, configure your wallet and network:
 
 ```bash
-claws config --private-key YOUR_PRIVATE_KEY --network base-sepolia
+claws config --key YOUR_PRIVATE_KEY --network sepolia
 ```
 
 ### Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--private-key` | Your wallet private key | Required |
-| `--network` | Network to use | `base-sepolia` |
-| `--rpc` | Custom RPC URL | Network default |
+| `--key`, `-k` | Your wallet private key | Required |
+| `--network`, `-n` | Network to use | `sepolia` |
+| `--rpc`, `-r` | Custom RPC URL | Network default |
 
 ### Environment Variables
 
@@ -38,7 +38,7 @@ Alternatively, set environment variables:
 
 ```bash
 export CLAWS_PRIVATE_KEY=0x...
-export CLAWS_NETWORK=base-sepolia
+export CLAWS_NETWORK=sepolia
 export CLAWS_RPC_URL=https://...
 ```
 
@@ -46,7 +46,7 @@ Or use a `.env` file:
 
 ```env
 CLAWS_PRIVATE_KEY=0x...
-CLAWS_NETWORK=base-sepolia
+CLAWS_NETWORK=sepolia
 ```
 
 ---
@@ -92,7 +92,7 @@ claws create --name "SubAgent" --tier micro
 
 Name: AEON
 Tier: Premium (0.011 ETH)
-Network: base-sepolia
+Network: sepolia
 
 Transaction: 0x1234...
 Token Address: 0xABCD...
@@ -254,7 +254,7 @@ import { ClawsCLI } from '@claws.fun/cli';
 
 const cli = new ClawsCLI({
   privateKey: process.env.PRIVATE_KEY,
-  network: 'base-sepolia'
+  network: 'sepolia'
 });
 
 // Create an agent
@@ -275,7 +275,7 @@ await cli.claim(result.tokenAddress);
 
 | Network | Chain ID | Status |
 |---------|----------|--------|
-| `base-sepolia` | 84532 | ✅ Live |
+| `sepolia` | 84532 | ✅ Live |
 | `base` | 8453 | 🔜 Coming |
 
 ---
@@ -301,7 +301,7 @@ For an AI agent to tokenize itself:
 
 # Set your wallet
 export CLAWS_PRIVATE_KEY="0x..."
-export CLAWS_NETWORK="base-sepolia"
+export CLAWS_NETWORK="sepolia"
 
 # Create yourself
 claws create \

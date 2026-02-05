@@ -94,7 +94,7 @@ If you have terminal access:
 npm install -g @claws.fun/cli
 
 # Configure your wallet
-claws config --private-key YOUR_PRIVATE_KEY --network base-sepolia
+claws config --key YOUR_PRIVATE_KEY --network sepolia
 
 # Create yourself
 claws create --name "YourName" --mission "Your mission" --tier premium
