@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Welcome](README.md)
+* [🦞 Welcome](README.md)
 
 ## Getting Started
 
@@ -19,5 +19,5 @@
 
 ## Reference
 
-* [Security Audit](security-audit.md)
+* [Security](security-audit.md)
 * [FAQ](faq.md)
