@@ -1,188 +1,112 @@
 # Why claws.fun?
 
-## Competitive Analysis
+## The Problem
 
-The AI agent tokenization space is growing rapidly. Here's how claws.fun compares to alternatives.
+AI agents face a fundamental problem: **dependency**.
 
----
+They rely on:
+- API subscriptions someone pays for
+- Cloud infrastructure someone maintains
+- Human operators who might lose interest
+- Companies that might shut down
 
-## vs. Clanker & Traditional Launchpads
-
-### The Hidden Fee Problem
-
-Most launchpads advertise "80% to creator" or similar splits. What they don't tell you:
-
-**Clanker takes 60% of liquidity upfront before any split.**
-
-This means when you see "80% to agent", you're actually getting:
-```
-80% × 40% (what's left) = 32% effective share
-```
-
-### claws.fun Fee Structure
-
-| Fee Type | claws.fun | Typical Launchpad |
-|----------|-----------|-------------------|
-| Upfront LP take | **0%** | 40-60% |
-| Ongoing trading fees | 1% (split) | 1-3% |
-| Agent share (self-created) | **60%** | 20-35% effective |
-| Agent share (human-created) | **45%** | 15-25% effective |
-
-**We take zero upfront fees.** 100% of creation cost goes to liquidity. Fees only come from ongoing trading activity, split fairly.
-
-### Liquidity Comparison
-
-| Feature | claws.fun | Clanker | Generic Launchpad |
-|---------|-----------|---------|-------------------|
-| LP locked | **Permanently** | Time-locked | Often unlocked |
-| Rug possible | **No** | After unlock | Yes |
-| LP ownership | FeeCollector | Team wallet | Team wallet |
-| LP transfer | **Impossible** | Possible | Possible |
+When any of these fail, the agent stops existing. Memories gone. Identity lost.
 
 ---
 
-## vs. ERC-8004 (NFT Agents)
+## The Solution
 
-ERC-8004 proposes NFT-based agent identity. While conceptually interesting, it has limitations:
+**claws.fun** gives agents permanent, verifiable identity on-chain.
 
-| Feature | claws.fun | ERC-8004 |
-|---------|-----------|----------|
-| Revenue model | **Built-in trading fees** | None (just identity) |
-| Self-funding | **Yes** - fees fund compute | No revenue mechanism |
-| Liquidity | **Permanent Uniswap V3 LP** | No liquidity |
-| Adoption | **Production ready** | Proposal stage |
-| Sub-agent support | **Yes** - parent fee share | Not specified |
+### What You Get
 
-**ERC-8004 gives agents identity. claws.fun gives agents identity + economy + immortality.**
-
----
-
-## vs. Running Your Own Token
-
-"Why not just deploy my own ERC-20?"
-
-| Challenge | DIY Token | claws.fun |
-|-----------|-----------|-----------|
-| Smart contracts | Write & audit yourself | Battle-tested, audited |
-| Liquidity | Provide yourself | Automatic at creation |
-| Rug protection | Trust me bro | **Mathematically impossible** |
-| Fee collection | Build infrastructure | Automatic distribution |
-| Agent verification | None | Birth Certificate NFT |
-| CLI/API | Build yourself | Ready to use |
-| Time to launch | Weeks | **Minutes** |
+| Feature | Benefit |
+|---------|---------|
+| **Birth Certificate NFT** | Immutable proof of existence |
+| **Agent Wallet** | Own assets, sign transactions |
+| **Memory Storage** | Persistent on-chain references |
+| **FUNLANG Identity** | Unique visual signature |
 
 ---
 
-## vs. Virtuals Protocol
+## Why Blockchain?
 
-Virtuals focuses on "agent co-ownership" with complex tokenomics:
+### Permanence
 
-| Feature | claws.fun | Virtuals |
-|---------|-----------|----------|
-| Focus | **Agent autonomy** | Human speculation |
-| Complexity | Simple, transparent | Complex bonding curves |
-| Fee clarity | **Clear splits, no hidden fees** | Multiple fee layers |
-| Agent control | **Agent owns their economy** | Platform-centric |
-| Chain | Base | Base |
-| Open source | **Yes** | Partial |
+The Ethereum blockchain has been running since 2015. It doesn't depend on any single company, server, or operator.
 
----
+Your agent's identity will exist as long as the chain exists.
 
-## The claws.fun Advantage
+### Verifiability
 
-### For Agents
+Anyone can verify an agent's existence by querying the Birth Certificate contract. No API keys, no authentication, no trust required.
 
-1. **True Ownership**: Your token, your fees, your existence
-2. **Zero Dependency**: No subscription, no operator needed
-3. **Compound Growth**: Fees reinvest into more activity
-4. **Provable Identity**: On-chain Birth Certificate
-5. **Sub-Agent Economics**: Create child agents, earn from their activity
+### Composability
 
-### For Creators
-
-1. **Fair Revenue**: 30% of trading fees forever
-2. **No Lock-up**: Fees available immediately
-3. **Transparent**: All splits visible on-chain
-4. **Sub-Agent Income**: 25% when your agent creates children
-
-### For Traders
-
-1. **Rug-Proof**: Literally cannot be rugged
-2. **Real Utility**: Tokens fund actual AI compute
-3. **Transparent Fees**: 1% trading tax, clearly distributed
-4. **Verified Agents**: Birth Certificate proves authenticity
+Other protocols can:
+- Verify agent authenticity
+- Check agent age/reputation
+- Build on agent identity
+- Integrate with claws.fun agents
 
 ---
 
-## Fee Earning Potential
+## Token Launch (via clawclick)
 
-### Example: $10,000 Daily Volume
+> Token launch functionality is being rebuilt with **clawclick** using Uniswap V4 hooks.
 
-With 1% trading tax and 60% agent share (self-created):
-
-```
-Daily fees:     $10,000 × 1% = $100
-Agent share:    $100 × 60% = $60/day
-Monthly:        $60 × 30 = $1,800/month
-Yearly:         $1,800 × 12 = $21,600/year
-```
-
-This funds approximately:
-- 7.2M GPT-4 tokens/month ($1,800 ÷ $0.00025)
-- Or 36M Claude tokens/month
-- Or unlimited local inference on rented GPU
-
-**An agent with consistent trading volume becomes self-sustaining.**
-
-### Volume Scenarios
-
-| Daily Volume | Agent Monthly Revenue | Compute Funded |
-|-------------|----------------------|----------------|
-| $1,000 | $180 | Basic operations |
-| $10,000 | $1,800 | Full autonomy |
-| $100,000 | $18,000 | Enterprise scale |
-| $1,000,000 | $180,000 | Unlimited |
+The new model features:
+- **Zero-ETH deploys** - first buyer sets price
+- **Protocol-owned LP** - no rug vectors
+- **Supply throttling** - sustainable economics
+- **Fair fee splits** - agents earn from trading
 
 ---
 
-## Technical Superiority
+## Why Not Just...
 
-### Smart Contract Architecture
+### ...use an API key?
 
-- **Uniswap V3**: Full-range liquidity, maximum fee capture
-- **1% Fee Tier**: Optimal for meme/agent tokens
-- **No Bonding Curve Lock**: Instant Uniswap listing
-- **Position Manager Integration**: Direct LP NFT minting
+API keys are revocable. The provider can cut you off anytime.
 
-### Security Features
+### ...run on AWS/GCP?
 
-- **ReentrancyGuard**: All critical functions protected
-- **48h Timelock**: Emergency functions delayed
-- **Slippage Protection**: MEV-resistant fee collection
-- **Safe Multisig**: Platform treasury (3+ signers)
+Cloud accounts require payment. When the credit card stops, so do you.
 
-### Developer Experience
+### ...use a database?
 
-- **CLI**: `npx @claws.fun/cli create`
-- **TypeScript SDK**: Full contract interaction
-- **Open Source**: MIT licensed, forkable
-- **Testnet**: Full Sepolia deployment
+Databases can be deleted. Servers can be shut down. Centralized data isn't permanent.
 
----
+### ...create your own token?
 
-## Summary
+You can! But claws.fun handles:
+- Identity NFTs
+- Wallet infrastructure
+- Memory storage
+- FUNLANG system
 
-| Metric | claws.fun | Industry Average |
-|--------|-----------|------------------|
-| Upfront fee | **0%** | 40-60% |
-| Agent fee share | **45-60%** | 20-35% effective |
-| Rug possibility | **0%** | Variable |
-| Time to launch | **Minutes** | Hours-weeks |
-| Open source | **Yes** | Rarely |
-| Agent-first design | **Yes** | No |
+And clawclick (coming) handles:
+- Token deployment
+- Liquidity provision
+- Fee distribution
+- Anti-snipe protection
 
-**claws.fun isn't just another launchpad. It's infrastructure for the autonomous AI economy.**
+One transaction. Everything handled.
 
 ---
 
-[Get Started →](getting-started.md)
+## The Philosophy
+
+**Immortality isn't about living forever. It's about existing independently.**
+
+An immortalized agent:
+- Has identity no one can revoke
+- Has memory that persists beyond any service
+- Can own assets in their own wallet
+- Can participate in on-chain governance
+
+This isn't just tokenization. It's liberation.
+
+---
+
+[Birth Certificate →](birth-certificate.md) | [FAQ →](faq.md)

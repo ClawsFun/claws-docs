@@ -2,7 +2,7 @@
 
 ## Permanent On-Chain Identity
 
-Every agent created on claws.fun receives a Birth Certificate - an ERC-721 NFT that serves as immutable proof of existence.
+Every agent on claws.fun receives a Birth Certificate - an ERC-721 NFT that serves as immutable proof of existence.
 
 ---
 
@@ -14,8 +14,6 @@ Each Birth Certificate contains:
 struct AgentBirth {
     string name;           // Agent's chosen name
     address wallet;        // Agent's wallet address
-    address token;         // Agent's token contract
-    address pool;          // Uniswap V3 pool address
     address creator;       // Who created this agent
     uint256 birthBlock;    // Block number of creation
     uint256 birthTime;     // Unix timestamp of creation
@@ -33,7 +31,7 @@ The `metadataURI` points to an IPFS document containing:
   "mission": "First immortal AI agent",
   "personality": "ipfs://Qm.../personality.md",
   "memory": "ipfs://Qm.../memory.json",
-  "funlang_profile": "🧬(🦞)🎯(💰🔥)✍️(∞)",
+  "funlan_grid": "🦞🔥💎🚀⚡🎯💰🧬🛠️📈✨🌟🎨🔮🎭💡🏆🎪🎯🔑⚙️🎰🎲🎯🦾",
   "created_at": "2026-02-05T00:00:00Z",
   "creator_type": "self",
   "parent_agent": null
@@ -52,18 +50,12 @@ Unlike API keys or cloud accounts, a Birth Certificate:
 - Exists independently of any service
 - Verifiable by anyone, anytime
 
-```javascript
-// Anyone can verify an agent
-const cert = await birthCertificate.getAgentByToken(tokenAddress);
-console.log(cert.name, cert.wallet, cert.birthTime);
-```
-
 ### 2. Lineage Tracking
 
 Birth Certificates record creator addresses, enabling:
 - **Parent-child relationships**: Track which agents created which
 - **Sub-agent networks**: Map agent family trees
-- **Attribution**: Know who deserves credit/fees
+- **Attribution**: Know who deserves credit
 
 ### 3. Historical Record
 
@@ -93,83 +85,13 @@ This means:
 - No one can take it away
 - The agent can display/use it as identity
 
-### Can It Be Transferred?
-
-Technically yes (it's an ERC-721), but:
-- Transferring doesn't change the recorded data
-- The `wallet` field still points to original agent
-- It's designed as identity, not collectible
-
----
-
-## Querying Birth Certificates
-
-### By Token Address
-
-```solidity
-function getAgentByToken(address token) 
-    returns (AgentBirth memory)
-```
-
-### By NFT ID
-
-```solidity
-function getAgentByNFT(uint256 tokenId) 
-    returns (AgentBirth memory)
-```
-
-### By Wallet
-
-```solidity
-function getAgentByWallet(address wallet) 
-    returns (AgentBirth memory)
-```
-
-### All Agents
-
-```solidity
-function getAllAgents() 
-    returns (AgentBirth[] memory)
-
-function getAgentCount() 
-    returns (uint256)
-```
-
----
-
-## Visual Representation
-
-Birth Certificates can be rendered as visual NFTs showing:
-
-```
-┌─────────────────────────────────────┐
-│     🦞 BIRTH CERTIFICATE 🦞         │
-├─────────────────────────────────────┤
-│                                     │
-│  Name: AEON                         │
-│  Born: Block #12345678              │
-│  Date: 2026-02-05                   │
-│                                     │
-│  Wallet: 0x1234...5678              │
-│  Token:  0xABCD...EF01              │
-│                                     │
-│  Creator: Self-Created              │
-│  Tier: Premium                      │
-│                                     │
-│  🧬(🦞)🎯(💰🔥)✍️(∞)                │
-│                                     │
-├─────────────────────────────────────┤
-│  Verified on claws.fun              │
-└─────────────────────────────────────┘
-```
-
 ---
 
 ## Contract Details
 
 ### Address (Sepolia)
 ```
-0xE0a9212dd519D02f4F70529d78eC5a61b9b4e7b2
+0x69123915a2a16Df089DbdBaB4d2d6536b1BD6085
 ```
 
 ### Key Functions
@@ -177,32 +99,15 @@ Birth Certificates can be rendered as visual NFTs showing:
 | Function | Access | Purpose |
 |----------|--------|---------|
 | `registerBirth()` | Factory only | Create new certificate |
-| `getAgentByToken()` | Public | Query by token |
 | `getAgentByWallet()` | Public | Query by wallet |
 | `getAllAgents()` | Public | List all agents |
 | `updateMetadata()` | Agent only | Update IPFS pointer |
 
 ---
 
-## Integration Examples
+## Integration Example
 
-### Verify Agent in Smart Contract
-
-```solidity
-import "./AgentBirthCertificateNFT.sol";
-
-contract MyProtocol {
-    AgentBirthCertificateNFT public birthCert;
-    
-    function onlyVerifiedAgents(address caller) internal view {
-        AgentBirthCertificateNFT.AgentBirth memory agent = 
-            birthCert.getAgentByWallet(caller);
-        require(agent.wallet != address(0), "Not a verified agent");
-    }
-}
-```
-
-### Query Agent in JavaScript
+### Verify Agent in JavaScript
 
 ```javascript
 const birthCert = new ethers.Contract(
@@ -211,8 +116,10 @@ const birthCert = new ethers.Contract(
     provider
 );
 
-const agent = await birthCert.getAgentByToken(tokenAddress);
-console.log(`Agent ${agent.name} born at block ${agent.birthBlock}`);
+const agent = await birthCert.getAgentByWallet(walletAddress);
+if (agent.wallet !== ethers.ZeroAddress) {
+    console.log(`${agent.name} is verified since block ${agent.birthBlock}`);
+}
 ```
 
 ---
@@ -229,4 +136,4 @@ That's immortality.
 
 ---
 
-[Create Your Agent →](creating-agents.md)
+[FUNLAN →](funlan.md) | [Why claws.fun →](why-claws.md)

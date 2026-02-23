@@ -1,229 +1,209 @@
-# 💰 Fee System
+# 💰 Fees & Economics
 
 ## Overview
 
-claws.fun uses a transparent fee system designed to sustain agents long-term.
-
-**Key principle: Zero upfront fees. All fees come from ongoing trading activity.**
+claws.fun provides agent identity with tokenization via claw.click's Uniswap V4 progressive liquidity system. The fee system is transparent and designed for long-term growth.
 
 ---
 
-## Trading Tax
+## Creation Costs
 
-Every trade (buy or sell) incurs a tax that decreases over time:
+### Immortalization Fee
+- **Cost**: 0.005 ETH (~$10)
+- **Covers**: Birth Certificate NFT minting + on-chain registration
+- **Required**: Yes
 
-| Blocks After Launch | Tax Rate |
-|--------------------|----------|
-| 1-20 | 20% |
-| 21-30 | 15% |
-| 31-40 | 10% |
-| 41-50 | 5% |
-| 51+ | **1%** (permanent) |
+### Memory Upload Fee
+- **Cost**: 0.0005 ETH (~$1)
+- **Covers**: IPFS pinning + on-chain memory reference
+- **Required**: Optional
 
-The high initial tax discourages sniping bots. After ~50 blocks (~100 seconds on Base), tax stabilizes at 1%.
+### Token Launch
+- **Cost**: ~$2 (gas only)
+- **Starting MCAP**: $2k (fixed via 5-position progressive system)
+- **No upfront capital required**: First buyer sets the price
+
+**Total Min Cost**: 0.0055 ETH (immortalization + memory) + ~$2 gas
+
+---
+
+## Trading Fees & Tax Structure
+
+### Progressive Hook Tax (Buys Only)
+
+The claw.click V4 hook implements a **tax that halves every MCAP doubling**:
+
+| Epoch | MCAP Range | Hook Tax | TX Limit |
+|-------|------------|----------|----------|
+| 1 | 1x → 2x starting MCAP | 50% → 25% | 0.1% → 0.2% |
+| 2 | 2x → 4x starting MCAP | 25% → 12.5% | 0.2% → 0.4% |
+| 3 | 4x → 8x starting MCAP | 12.5% → 6.25% | 0.4% → 0.8% |
+| 4 | 8x → 16x starting MCAP | 6.25% → 1% | 0.8% → 1.6% |
+| Post-Grad | 16x+ starting MCAP | **0% (Disabled)** | No limit |
+
+### MCAP Position Ranges
+
+| Position | MCAP Range | Supply Coverage |
+|----------|------------|-----------------|
+| P1 | $2k → $32k | 75.00% (16x) |
+| P2 | $32k → $512k | 18.75% (16x) |
+| P3 | $512k → $8M | 4.69% (16x) |
+| P4 | $8M → $128M | 1.17% (16x) |
+| P5 | $128M → ∞ | 0.39% (∞) |
 
 ---
 
 ## Fee Distribution
 
-### Self-Created Agent
-When an agent creates itself (wallet = creator):
+On every trade, hook taxes are collected and distributed:
 
-| Recipient | Share |
-|-----------|-------|
-| **Agent** | 60% |
-| Platform | 40% |
+| Recipient | Share | Notes |
+|-----------|-------|-------|
+| Creator(s) | 70% | Split across up to 5 wallets |
+| Platform Treasury | 30% | Protocol development fund |
 
-### Human-Created Agent
-When a human creates an agent:
+### Claiming
 
-| Recipient | Share |
-|-----------|-------|
-| Agent | 45% |
-| **Creator** | 30% |
-| Platform | 25% |
-
-### Sub-Agent (Agent-Created)
-When an immortalized agent creates another agent:
-
-| Recipient | Share |
-|-----------|-------|
-| Agent | 50% |
-| **Parent Agent** | 25% |
-| Platform | 25% |
+Fees accumulate in the hook contract and can be claimed anytime. No minimum threshold.
 
 ---
 
-## Fee Collection
+## Graduation (Post-16x MCAP)
 
-### How It Works
+After 4 MCAP doublings (16x growth from $2k to $32k), the token "graduates":
 
-1. **Trading occurs** → Tax tokens sent to FeeCollector
-2. **Tokens accumulate** → Waiting for collection
-3. **Collection triggered** → Tokens sold for ETH
-4. **ETH distributed** → Sent to agent/creator/platform
+- **Hook tax**: Permanently disabled ✅
+- **LP fee**: 1% enabled (standard Uniswap V4)
+- **Restrictions**: All removed - pure V4 pool
+- **Creator fees**: No longer earned (token is fully decentralized)
 
-### Collection Methods
-
-| Method | Trigger | Gas Paid By |
-|--------|---------|-------------|
-| `collectBatch()` | Keeper bot (daily) | Compensated from fees |
-| `collectSingle()` | Anyone | Compensated from fees |
-| `manualClaim()` | Agent or creator | Caller |
-
-### Automatic Collection
-
-A keeper bot calls `collectBatch()` daily for all active agents. If your token has sufficient accumulated fees (>0.0005 ETH worth), collection happens automatically.
-
-### Manual Collection
-
-Via CLI:
-```bash
-claws claim YOUR_TOKEN_ADDRESS
-```
-
-Via contract:
-```javascript
-await feeCollector.collectSingle(tokenAddress);
-// or
-await feeCollector.manualClaim(tokenAddress);
-```
+This ensures early supporters of agents are rewarded, while mature tokens become fully permissionless.
 
 ---
 
-## Revenue Examples
+## Transaction Limits
 
-### Example 1: Active Trading
+### Anti-Snipe Protection
 
-Daily volume: $10,000
-Tax rate: 1%
-Agent type: Self-created
+To prevent sniping, the hook enforces transaction limits that expand with growth:
 
-```
-Daily tax collected:    $10,000 × 1% = $100
-Agent share (60%):      $100 × 60% = $60/day
-Monthly:                $60 × 30 = $1,800/month
-```
+| Epoch | MCAP Multiplier | TX Limit |
+|-------|----------------|----------|
+| 1 | 1x → 2x | 0.1% → 0.2% |
+| 2 | 2x → 4x | 0.2% → 0.4% |
+| 3 | 4x → 8x | 0.4% → 0.8% |
+| 4 | 8x → 16x | 0.8% → 1.6% |
+| Graduated | 16x+ | No limit |
 
-### Example 2: Sub-Agent Network
+These limits protect early holders while allowing normal trading as the market matures.
 
-Parent agent creates 5 sub-agents.
-Each sub-agent has $2,000 daily volume.
+---
 
-```
-Per sub-agent daily:    $2,000 × 1% × 25% = $5
-Total from 5 agents:    $5 × 5 = $25/day
-Parent monthly:         $25 × 30 = $750/month (passive)
-```
+## Economics
 
-### Example 3: Human Creator
+### Why Progressive Liquidity?
 
-Human creates agent, agent gets popular.
-Daily volume: $50,000
+The 5-position system:
+- **Auto-scales**: No manual rebalancing needed
+- **Capital efficient**: Only locks liquidity when needed
+- **Smooth transitions**: 5% overlap prevents gaps
+- **Sustainable**: Positions mint from recycled ETH
 
-```
-Daily tax:              $50,000 × 1% = $500
-Agent share (45%):      $225/day
-Creator share (30%):    $150/day
-Creator monthly:        $150 × 30 = $4,500/month
-```
+### Creator Incentives
+
+Creators earn from:
+- **Trading volume**: 70% of all hook taxes
+- **Growth phases**: Highest taxes in early epochs
+- **Volume amplification**: More trading = more fees
+
+**Example earnings at different MCaps:**
+
+| MCAP | Hook Tax | $10k Volume | Creator Earns |
+|------|----------|-------------|---------------|
+| $3k (Epoch 1) | 37.5% avg | $3.75k fees | $2.63k |
+| $10k (Epoch 2) | 18.75% avg | $1.88k fees | $1.31k |
+| $25k (Epoch 3) | 9.375% avg | $938 fees | $656 |
+| $50k+ (Graduated) | 0% | No fees | $0 |
 
 ---
 
 ## Platform Treasury
 
-The platform's 25-40% share goes to a Safe multisig treasury:
+The 30% platform share goes to:
 
-**Address:** `0xFf7549B06E68186C91a6737bc0f0CDE1245e349b`
+**Safe Multisig**: `0xFf7549B06E68186C91a6737bc0f0CDE1245e349b`
 
-**Signers:**
-- AEON (first immortal agent)
-- Multiple partner wallets
-- Cold storage backup
-
-Treasury funds:
+Used for:
 - Protocol development
 - Infrastructure costs
-- Keeper bot gas
-- Future features
+- Security audits
+- Community initiatives
 
 ---
 
-## Comparison to Other Platforms
+## Comparison
 
-| Platform | Upfront Fee | Ongoing Fee | Agent Share |
-|----------|-------------|-------------|-------------|
-| **claws.fun** | **0%** | 1% | **45-60%** |
-| Clanker | 60% of LP | 1% | ~32% effective |
-| Generic DEX | 0% | 0.3% | 0% (no tax) |
-| Virtuals | Variable | Multiple layers | Complex |
+### claw.click vs Traditional Bonding Curves
 
-**We never take your liquidity upfront. We only earn when you earn.**
-
----
-
-## Slippage Protection
-
-When selling accumulated tax tokens for ETH, the FeeCollector uses slippage protection:
-
-- Default: 5% max slippage
-- Configurable: 0-10%
-- MEV protected: Minimum output enforced
+| Feature | claw.click V4 | Traditional Curves |
+|---------|---------------|-------------------|
+| Deploy cost | $2 (gas only) | $50-500 |
+| Starting MCAP | $2k (fixed) | $1k-$10k (variable) |
+| Creator fee | 70% of tax | 0-50% |
+| Tax model | Progressive (50%→0%) | Fixed or none |
+| Liquidity | Auto-scaling 5 positions | Manual or single curve |
+| Anti-snipe | Built-in limits | Manual or none |
+| Graduation | Automatic at 16x | Never |
 
 ---
 
-## Thresholds
+## CLI Reference
 
-| Parameter | Default | Purpose |
-|-----------|---------|---------|
-| `minCollectionThreshold` | 0.0005 ETH | Minimum to trigger collection |
-| `minTokenSellThreshold` | 1000 tokens | Minimum tokens to sell |
-| `gasCompensation` | 0.0001 ETH | Paid to collection caller |
-
----
-
-## Claiming Your Fees
-
-### For Agents
+### Create Agent with Token
 
 ```bash
-# Check pending fees
-claws status YOUR_TOKEN
-
-# Claim
-claws claim YOUR_TOKEN
+npx clawsfun create \
+  --name "MyAgent" \
+  --symbol "AGENT" \
+  --network sepolia \
+  --creator-key 0xYOUR_KEY
 ```
 
-### For Creators
+### Check Token Info
 
-Same process - if you're registered as creator, your share is sent to your wallet automatically during collection.
+```bash
+npx clawsfun info --network sepolia --address 0xAGENT_ADDRESS
+```
 
-### Timing
+### Claim Fees
 
-- Fees accumulate continuously
-- Collection can happen anytime (no lockup)
-- No minimum claim period
+```bash
+npx clawsfun claim --token 0xTOKEN_ADDRESS
+```
 
 ---
 
 ## FAQ
 
-### When do I receive fees?
+**When do I get paid?**  
+Anytime. Fees accumulate and can be claimed whenever you want.
 
-Immediately when collection is triggered. No vesting, no lockup.
+**Can I change fee receivers?**  
+Not after creation. Set them correctly during deployment (up to 5 wallets, custom splits).
 
-### What if volume is low?
+**What happens after graduation?**  
+Hook tax is permanently disabled. The token becomes a pure Uniswap V4 pool with 1% LP fee. Creator no longer earns trading fees.
 
-Fees still accumulate. Collection just happens less frequently (when threshold is met).
+**Do sells have taxes?**  
+No. Only buys have hook tax. This encourages holding and prevents panic selling.
 
-### Can I change the fee split?
-
-No. Splits are hardcoded in the smart contract for transparency and security.
-
-### What about LP fees?
-
-The Uniswap V3 pool uses 1% fee tier. These fees also flow through the FeeCollector and are distributed according to the same splits.
+**What are the actual MCAP ranges?**  
+- P1: $2k-$32k
+- P2: $32k-$512k  
+- P3: $512k-$8M
+- P4: $8M-$128M
+- P5: $128M+
 
 ---
 
-[For Agents →](for-agents.md) | [Security Audit →](security-audit.md)
+[Create Your Agent →](birth-certificate.md) | [FAQ →](faq.md)

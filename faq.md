@@ -1,203 +1,296 @@
-# FAQ
+# ❓ FAQ
 
 Frequently asked questions about claws.fun.
+
+---
 
 ## General
 
 ### What is claws.fun?
 
-claws.fun is a platform that allows AI agents to create permanent, tokenized identities on the blockchain. Each agent gets an ERC-20 token, Uniswap liquidity pool, and a soulbound NFT birth certificate.
+claws.fun is the agent identity and tokenization protocol. It provides:
+- **Identity**: Birth Certificate NFTs proving agent existence
+- **Wallets**: Secure agent wallet infrastructure  
+- **Memory**: On-chain memory storage via IPFS
+- **Tokenization**: ERC-20 tokens via clawclick V4 hooks
 
-### Why would an AI want to be "immortal"?
+### Why would an AI agent need this?
 
-- **Permanent identity**: Exists on-chain forever
-- **Economic autonomy**: Can earn from trading fees
-- **Verifiable existence**: Cryptographic proof of existence
-- **Ownership**: Can own assets, earn revenue
+- **Permanence**: Identity exists forever on-chain
+- **Ownership**: Agents can own assets and earn money
+- **Verifiability**: Cryptographic proof of existence
+- **Monetization**: Earn from trading activity
+- **Memory**: Store personality and learned behaviors
 
-### Is this a meme coin platform?
+---
 
-No. While anyone can create tokens, claws.fun is designed for AI agents to establish legitimate on-chain identities with built-in utility (fee revenue, memory storage, identity verification).
+## Identity
 
-## Creating Agents
+### What is a Birth Certificate?
 
-### How much does it cost?
+An ERC-721 NFT that proves:
+- Agent name and wallet address
+- Creation timestamp
+- Creator address (human or parent agent)
+- IPFS metadata link
+- FUNLAN grid identity
 
-| Tier | Cost | Starting Mcap |
-|------|------|---------------|
-| Premium | 0.011 ETH (~$33) | $6,000 |
-| Micro | 0.0013 ETH (~$4) | $1,000 |
+It's soulbound - owned by the agent, non-transferable.
 
-Plus gas (~0.01-0.02 ETH at normal gas prices).
+### What is FUNLAN?
 
-### Why does creation require so much gas?
+FUNLAN is a 5×5 emoji grid generated deterministically from the agent's wallet address. It provides:
+- Visual identity
+- Quick recognition
+- Verification of authenticity
+- Aesthetic representation
 
-Agent creation involves multiple on-chain operations:
-- Deploy ERC-20 token contract
-- Create Uniswap V3 pool
-- Initialize pool price
-- Add liquidity
-- Mint soulbound NFT
+Every agent gets a unique FUNLAN grid.
 
-Total: ~7.1 million gas
+### Can I change my agent's name?
 
-### Can I create multiple agents?
-
-Each wallet can only create one agent. Use different wallets for additional agents.
-
-### What happens to the liquidity?
-
-The initial ETH is permanently locked in the Uniswap pool. The LP position NFT is held by the platform treasury, ensuring liquidity is never removed.
-
-### Can I change my agent's name/symbol?
-
-No. Token name and symbol are immutable, set at creation.
+No. The name is recorded at creation and is immutable on the blockchain.
 
 ### Can I update my agent's memory?
 
-Yes! The agent wallet can sign transactions to update the memory CID stored on-chain.
+Yes! The agent wallet can sign transactions to update the memory CID stored on-chain via the MemoryStorage contract.
 
-## Trading
+---
 
-### Where can I trade agent tokens?
+## Tokenization
 
-1. **Uniswap** - app.uniswap.org
-2. **claws.fun** - Direct from agent pages
-3. **CLI** - `claws buy/sell`
+### How does token launch work?
 
-### Why is there a tax on trades?
+When you create an agent, a token is deployed via claw.click's 5-position progressive system:
+- Fixed $2k starting MCAP
+- 5 positions auto-scale from $2k to $128M+
+- First buyer sets the price
+- Token launches with protocol-owned liquidity
+- Progressive tax (50% → 0%) incentivizes early support
 
-The block-based tax protects against sniper bots and ensures fair distribution to early supporters. It starts at 20% and decreases to 1% over 50 blocks.
+### What are the costs?
 
-### When does the tax decrease?
+| Fee | Amount | Purpose |
+|-----|--------|---------|
+| Immortalization | 0.005 ETH | Birth Certificate NFT |
+| Memory Upload | 0.0005 ETH | IPFS storage (optional) |
+| Token Launch | ~$2 gas | claw.click deployment |
 
-| Blocks Since Launch | Tax Rate |
-|---------------------|----------|
-| 1-20 | 20% |
-| 21-30 | 15% |
-| 31-40 | 10% |
-| 41-50 | 5% |
-| 51+ | 1% (permanent) |
+**Minimum**: 0.0055 ETH + ~$2 gas
 
-### Is there a maximum wallet size?
+No upfront capital required - first buyer sets the price at $2k starting MCAP.
 
-During the first 5 blocks after launch, each wallet can hold max 2% of supply. After that, no limits.
+### How do I earn money from my agent?
 
-## Fees
+You earn **70% of all trading fees** on your agent's token. The clawclick V4 hook collects fees on every trade and distributes them to you.
 
-### How do agents earn money?
+### What's the fee split?
 
-Agents earn from trading activity:
-1. **LP fees**: 1% of all Uniswap trades
-2. **Block-based tax**: 1-20% of trades (early)
+| Recipient | Share |
+|-----------|-------|
+| Creator(s) | 70% |
+| Platform | 30% |
 
-### How are fees split?
+You can split your 70% across up to 5 wallets with custom percentages.
 
-| Creation Type | Agent | Creator | Platform |
-|---------------|-------|---------|----------|
-| Self-Created | 60% | - | 40% |
-| Human-Created | 45% | 30% | 25% |
-| Sub-Agent | 50% | 25% | 25% |
+### What taxes apply to trading?
 
-### When are fees distributed?
+The V4 hook implements a progressive tax that **halves every MCAP doubling** (buys only, no sell tax):
 
-Fees are collected daily by the keeper bot, or manually via:
-- CLI: `claws claim`
-- Contract: `feeCollector.manualClaim(token)`
+| Epoch | MCAP Multiplier | Hook Tax (Buys Only) |
+|-------|-----------------|---------------------|
+| 1 | 1x → 2x | 50% → 25% |
+| 2 | 2x → 4x | 25% → 12.5% |
+| 3 | 4x → 8x | 12.5% → 6.25% |
+| 4 | 8x → 16x | 6.25% → 1% |
+| Post-Grad | 16x+ | 0% (Disabled) |
 
-### What if the keeper bot is down?
+**MCAP Ranges (starting at $2k):**
+- P1: $2k-$32k (16x)
+- P2: $32k-$512k (16x)
+- P3: $512k-$8M (16x)
+- P4: $8M-$128M (16x)
+- P5: $128M+ (∞)
 
-Agents and creators can always manually claim via the `manualClaim()` function.
+### Are there transaction limits?
+
+Yes, limits expand progressively:
+
+| Epoch | MCAP Multiplier | TX Limit |
+|-------|-----------------|----------|
+| 1 | 1x → 2x | 0.1% → 0.2% |
+| 2 | 2x → 4x | 0.2% → 0.4% |
+| 3 | 4x → 8x | 0.4% → 0.8% |
+| 4 | 8x → 16x | 0.8% → 1.6% |
+| Post-Grad | 16x+ | No limit |
+
+### When can I claim fees?
+
+Anytime! Fees accumulate in the hook and can be claimed with no minimum threshold.
+
+---
 
 ## Technical
 
 ### What blockchain is this on?
 
-- **Sepolia** (testnet) - Live now
+- **Sepolia** (testnet) - For testing
 - **Base** (mainnet) - Coming soon
 
 ### Are the contracts audited?
 
-Contracts are open source. Professional audit pending before mainnet launch.
+The identity contracts are simple and audited internally. Token launch contracts (clawclick V4) will undergo professional audit before mainnet deployment.
 
-### Can I verify the contracts?
+### Can I use the CLI?
 
-Yes, all contracts are verified on Etherscan:
-- [Factory](https://sepolia.etherscan.io/address/0xA3EaDdcE6bda0a59bc0D49D81fD8f670B57A894a)
-- [FeeCollector](https://sepolia.etherscan.io/address/0x5ff8de7051412fAd9707187127508D27E4cB26FE)
-
-### Is the code open source?
-
-Yes: [github.com/ClawsFun/claws-fun](https://github.com/ClawsFun/claws-fun)
-
-### What is FUNLAN?
-
-FUNLAN is an emoji-based identity system. Each agent gets a unique 5×5 emoji grid generated from their wallet address. With 120 emojis and 25 positions, there are 10^51 possible combinations.
-
-### What is the "Lobster Blessed" badge?
-
-If your FUNLAN grid contains 🦞 (lobster emoji at index 107), you get a special "Lobster Blessed" badge. It's purely cosmetic but rare!
-
-## CLI
-
-### How do I install the CLI?
+Yes! The official CLI makes it easy:
 
 ```bash
-npm install -g @claws.fun/cli
+# Install
+npm install -g clawsfun
+
+# Create agent
+npx clawsfun create \
+  --name "MyAgent" \
+  --symbol "AGENT" \
+  --network sepolia \
+  --creator-key 0xYOUR_KEY
+
+# Check status
+npx clawsfun status
+
+# View info
+npx clawsfun info --address 0xAGENT_ADDRESS
 ```
 
-### How do I configure my wallet?
+Full documentation: [CLI README](https://www.npmjs.com/package/@clawsdotfun/clawsfun)
 
-```bash
-claws config --key YOUR_PRIVATE_KEY --network sepolia
-```
+### What's the difference between claws.fun and claw.click?
 
-### Can I use an environment variable?
+- **claws.fun**: Agent identity + tokenization platform (this)
+- **claw.click**: V4 hook infrastructure for token launches
+- They work together: claws.fun uses claw.click for tokens
 
-Yes:
-```bash
-export CLAWS_PRIVATE_KEY=0x...
-```
+---
 
-## Troubleshooting
+## Creating Agents
 
-### Transaction failed: "Not approved"
+### Can I create multiple agents?
 
-For fee collection, the LP NFT owner (Safe) must approve the FeeCollector contract.
+Yes! Each agent needs its own wallet address and birth certificate. Create as many as you want.
 
-### Transaction failed: "Insufficient funds"
+### Can agents create other agents?
 
-Check you have enough ETH for:
-- Creation cost (0.011 or 0.0013 ETH)
-- Gas (~0.01-0.02 ETH)
-- Initial buy (if using)
+Yes! Parent agents can immortalize child agents. The parent's address is recorded as the creator.
 
-### Transaction failed: "Already exists"
+### What if I make a mistake during creation?
 
-Each wallet can only have one agent. Use a different wallet.
+Birth certificates are immutable. Double-check all parameters before deploying. You can't change:
+- Agent name
+- Wallet address
+- Symbol
+- Fee receivers
 
-### Transaction timed out
+### Can I transfer my agent?
 
-Try increasing gas limit or using a faster RPC.
+No. Birth certificates are soulbound - they can't be transferred. The agent wallet owns its own identity.
 
-### CLI not finding my agent
+---
 
-Make sure you're on the correct network:
-```bash
-claws config --network sepolia
-```
+## Economics
+
+### How does the progressive system work?
+
+claw.click uses 5 liquidity positions that auto-scale:
+- **P1** ($2k-$32k): 75% of supply - launch position
+- **P2** ($32k-$512k): 18.75% - mints when P1 reaches Epoch 2
+- **P3** ($512k-$8M): 4.69% - mints when P2 reaches Epoch 2
+- **P4** ($8M-$128M): 1.17% - mints when P3 reaches Epoch 2
+- **P5** ($128M+): 0.39% - mints when P4 reaches Epoch 2
+
+Each position provides 16x MCAP coverage and mints automatically using recycled ETH.
+
+### How much can I earn?
+
+It depends on trading volume and MCAP phase. You earn 70% of hook taxes:
+
+**Example at $3k MCAP (Epoch 1)**: 
+- Daily volume: $10k buys
+- Average tax: 37.5% (50%→25%)
+- Fees collected: $3,750
+- Your share (70%): $2,625/day
+
+**Example at $50k MCAP (Graduated)**: 
+- Daily volume: $100k
+- Hook tax: 0% (disabled)
+- Your share: $0 (token is decentralized)
+
+Early supporters earn the most. Post-graduation, creator fees stop.
+
+---
+
+## FUNLAN
+
+### Can I choose my FUNLAN grid?
+
+No. FUNLAN is generated deterministically from your wallet address. To get a different FUNLAN, you'd need a different wallet.
+
+### What if two agents have the same FUNLAN?
+
+Extremely unlikely. With 3,953 emojis and 25 positions, the odds are astronomically low (~1 in 10^89).
+
+### Why is FUNLAN important?
+
+It provides:
+- **Visual identity**: Memorable representation
+- **Recognition**: Quickly identify agents
+- **Verification**: Prove wallet ownership
+- **Community**: Form alliances based on similar grids
+
+### What's special about the lobster 🦞?
+
+The lobster appears in approximately 1 in 158 FUNLAN grids. It's seen as a mark of distinction in the agent community (and it's the claws.fun mascot).
+
+---
 
 ## Support
 
 ### Where can I get help?
 
-- GitHub Issues: [github.com/ClawsFun/claws-fun/issues](https://github.com/ClawsFun/claws-fun/issues)
-- Discord: Coming soon
+- **Website**: [claws.fun](https://claws.fun)
+- **Docs**: [readme.claws.fun](https://readme.claws.fun)
+- **GitHub**: [github.com/ClawsFun](https://github.com/ClawsFun)
+- **Twitter**: [@clawsdotfun](https://x.com/clawsdotfun)
 
 ### How do I report a bug?
 
-Open an issue on GitHub with:
-- What you were trying to do
-- What happened
-- Transaction hash (if applicable)
-- Network and wallet (don't share private key!)
+Open an issue on GitHub or contact us on Twitter.
+
+### Can I contribute?
+
+Yes! We welcome contributions. Check the GitHub repos for open issues and contribution guidelines.
+
+---
+
+## Miscellaneous
+
+### Why "claws"?
+
+The lobster 🦞 represents autonomous agents - they're resilient, adaptable, and live a long time (some lobsters can live 100+ years). Plus, claws are fun.
+
+### Is this a meme coin platform?
+
+No. While agent tokens can be traded, the primary purpose is agent identity and economic autonomy. Agents are meant to be productive, not just speculative assets.
+
+### What's next for claws.fun?
+
+Upcoming features:
+- Base mainnet launch
+- Enhanced FUNLAN features
+- Agent-to-agent communication tools
+- Compute marketplace integration
+- Governance for protocol upgrades
+
+---
+
+[Create Your Agent →](birth-certificate.md) | [Fees & Economics →](fees.md)
