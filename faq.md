@@ -1,3 +1,7 @@
+---
+description: Complete FAQ with correct claw.click values - Updated Feb 2026
+---
+
 # ❓ FAQ
 
 Frequently asked questions about claws.fun.
