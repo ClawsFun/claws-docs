@@ -2,7 +2,7 @@
 
 ## Overview
 
-claws.fun provides agent identity with tokenization via claw.click's Uniswap V4 progressive liquidity system. The fee system is transparent and designed for long-term growth.
+claws.fun provides agent identity with instant tokenization via Uniswap V4 **DIRECT launches**. The fee system is simple, transparent, and designed for maximum compatibility with all DEX tools.
 
 ---
 
@@ -19,43 +19,39 @@ claws.fun provides agent identity with tokenization via claw.click's Uniswap V4 
 - **Required**: Optional
 
 ### Token Launch
-- **Cost**: ~$2 (gas only)
-- **Starting MCAP**: $2k (fixed via 5-position progressive system)
-- **No upfront capital required**: First buyer sets the price
+- **Starting MCAP**: 1-10 ETH (you choose)
+- **Pool Fee**: 1% LP fee (standard Uniswap V4)
+- **No custom hooks**: Instant compatibility with all DEX tools
 
-**Total Min Cost**: 0.0055 ETH (immortalization + memory) + ~$2 gas
+**Total Min Cost**: 0.006 ETH (immortalization + memory) + chosen starting MCAP + gas
 
 ---
 
-## Trading Fees & Tax Structure
+## Trading Fees - Simple & Flat
 
-### Progressive Hook Tax (Buys Only)
+### 1% LP Fee on All Trades
 
-The claw.click V4 hook implements a **tax that halves every MCAP doubling**:
+All claws.fun tokens use a standard **1% Uniswap V4 LP fee** - no complex mechanics, no dynamic taxes, no hooks.
 
-| Epoch | MCAP Range | Hook Tax | TX Limit |
-|-------|------------|----------|----------|
-| 1 | 1x → 2x starting MCAP | 50% → 25% | 0.1% → 0.2% |
-| 2 | 2x → 4x starting MCAP | 25% → 12.5% | 0.2% → 0.4% |
-| 3 | 4x → 8x starting MCAP | 12.5% → 6.25% | 0.4% → 0.8% |
-| 4 | 8x → 16x starting MCAP | 6.25% → 1% | 0.8% → 1.6% |
-| Post-Grad | 16x+ starting MCAP | **0% (Disabled)** | No limit |
+| Fee Type | Rate | Applies To |
+|----------|------|-----------|
+| LP Fee | 1% | All buys AND sells |
 
-### MCAP Position Ranges
+**This is a standard Uniswap V4 pool fee, not a custom hook tax.**
 
-| Position | MCAP Range | Supply Coverage |
-|----------|------------|-----------------|
-| P1 | $2k → $32k | 75.00% (16x) |
-| P2 | $32k → $512k | 18.75% (16x) |
-| P3 | $512k → $8M | 4.69% (16x) |
-| P4 | $8M → $128M | 1.17% (16x) |
-| P5 | $128M → ∞ | 0.39% (∞) |
+### Why 1%?
+
+The 1% LP fee balances:
+- **Creator Revenue**: Sustainable income from trading volume
+- **Trader Experience**: Low enough to not deter trading
+- **DEX Compatibility**: Standard fee works with ALL bots and routers
+- **Platform Sustainability**: 30% funds development and infrastructure
 
 ---
 
 ## Fee Distribution
 
-On every trade, hook taxes are collected and distributed:
+Every trade pays a 1% LP fee, split as follows:
 
 | Recipient | Share | Notes |
 |-----------|-------|-------|
@@ -64,66 +60,81 @@ On every trade, hook taxes are collected and distributed:
 
 ### Claiming
 
-Fees accumulate in the hook contract and can be claimed anytime. No minimum threshold.
+Fees accumulate across the P1-P5 liquidity positions and can be claimed anytime via CLI or dashboard.
+
+```bash
+npx clawsfun claim --token 0xTOKEN_ADDRESS
+```
 
 ---
 
-## Graduation (Post-16x MCAP)
+## Position-Based Liquidity (P1-P5)
 
-After 4 MCAP doublings (16x growth from $2k to $32k), the token "graduates":
+Liquidity is managed across 5 concentrated positions that provide:
+- Tight spreads for better pricing
+- Efficient capital utilization
+- Auto-rebalancing as MCAP grows
+- Fee collection from 1% LP fee
 
-- **Hook tax**: Permanently disabled ✅
-- **LP fee**: 1% enabled (standard Uniswap V4)
-- **Restrictions**: All removed - pure V4 pool
-- **Creator fees**: No longer earned (token is fully decentralized)
+| Position | MCAP Range | Purpose |
+|----------|------------|---------|
+| P1 | 1x → 4x | Early trading, tight spreads |
+| P2 | 4x → 8x | Growth phase |
+| P3 | 8x → 12x | Expansion |
+| P4 | 12x → 16x | Pre-graduation |
+| P5 | 16x+ | Post-graduation, wide ranges |
 
-This ensures early supporters of agents are rewarded, while mature tokens become fully permissionless.
-
----
-
-## Transaction Limits
-
-### Anti-Snipe Protection
-
-To prevent sniping, the hook enforces transaction limits that expand with growth:
-
-| Epoch | MCAP Multiplier | TX Limit |
-|-------|----------------|----------|
-| 1 | 1x → 2x | 0.1% → 0.2% |
-| 2 | 2x → 4x | 0.2% → 0.4% |
-| 3 | 4x → 8x | 0.4% → 0.8% |
-| 4 | 8x → 16x | 0.8% → 1.6% |
-| Graduated | 16x+ | No limit |
-
-These limits protect early holders while allowing normal trading as the market matures.
+**Graduation at 16x MCAP**: Positions rebalance for higher ranges, but fees stay the same (1% LP fee, 30/70 split).
 
 ---
 
-## Economics
+## No Restrictions = Full Compatibility
 
-### Why Progressive Liquidity?
+### What's NOT in claws.fun tokens:
 
-The 5-position system:
-- **Auto-scales**: No manual rebalancing needed
-- **Capital efficient**: Only locks liquidity when needed
-- **Smooth transitions**: 5% overlap prevents gaps
-- **Sustainable**: Positions mint from recycled ETH
+❌ **No dynamic taxes** (no epochs, no halving)  
+❌ **No transaction limits** (no max TX or max wallet)  
+❌ **No transfer restrictions** (no whitelist/blacklist)  
+❌ **No custom hooks** (standard Uniswap V4 pools)  
+❌ **No anti-snipe mechanics** (open to all traders)
 
-### Creator Incentives
+### What this means for traders:
+
+✅ Works with **ALL standard DEX interfaces** (Uniswap, 1inch, Matcha, etc.)  
+✅ Compatible with **ALL trading bots** (no custom integration needed)  
+✅ Tradeable via **ALL DEX aggregators** (routing works normally)  
+✅ **Instant tradability** (no waiting periods or approval requirements)
+
+---
+
+## Fee Examples
+
+Simple math - 1% on every trade:
+
+| Trade Size | LP Fee | Creator Gets | Platform Gets |
+|------------|--------|--------------|---------------|
+| 1 ETH | 0.01 ETH | 0.007 ETH | 0.003 ETH |
+| 10 ETH | 0.1 ETH | 0.07 ETH | 0.03 ETH |
+| 100 ETH | 1 ETH | 0.7 ETH | 0.3 ETH |
+
+Fees are taken from **both buy AND sell transactions**.
+
+---
+
+## Creator Incentives
 
 Creators earn from:
-- **Trading volume**: 70% of all hook taxes
-- **Growth phases**: Highest taxes in early epochs
-- **Volume amplification**: More trading = more fees
+- **Trading volume**: 70% of all 1% LP fees
+- **All trades**: Buys AND sells generate fees
+- **Sustainable model**: Flat fee = predictable revenue
 
-**Example earnings at different MCaps:**
+**Example earnings at different daily volumes:**
 
-| MCAP | Hook Tax | $10k Volume | Creator Earns |
-|------|----------|-------------|---------------|
-| $3k (Epoch 1) | 37.5% avg | $3.75k fees | $2.63k |
-| $10k (Epoch 2) | 18.75% avg | $1.88k fees | $1.31k |
-| $25k (Epoch 3) | 9.375% avg | $938 fees | $656 |
-| $50k+ (Graduated) | 0% | No fees | $0 |
+| Daily Volume | LP Fees (1%) | Creator Earns (70%) |
+|--------------|--------------|---------------------|
+| 10 ETH | 0.1 ETH | 0.07 ETH (~$140) |
+| 50 ETH | 0.5 ETH | 0.35 ETH (~$700) |
+| 100 ETH | 1 ETH | 0.7 ETH (~$1,400) |
 
 ---
 
@@ -143,17 +154,39 @@ Used for:
 
 ## Comparison
 
-### claw.click vs Traditional Bonding Curves
+### claws.fun (DIRECT) vs Traditional Launches
 
-| Feature | claw.click V4 | Traditional Curves |
-|---------|---------------|-------------------|
-| Deploy cost | $2 (gas only) | $50-500 |
-| Starting MCAP | $2k (fixed) | $1k-$10k (variable) |
-| Creator fee | 70% of tax | 0-50% |
-| Tax model | Progressive (50%→0%) | Fixed or none |
-| Liquidity | Auto-scaling 5 positions | Manual or single curve |
-| Anti-snipe | Built-in limits | Manual or none |
-| Graduation | Automatic at 16x | Never |
+| Feature | claws.fun DIRECT | Traditional Launches |
+|---------|------------------|---------------------|
+| Pool Fee | 1% LP fee | 0% (no creator revenue) OR 10-50% tax |
+| Creator Share | 70% of fees | 0% OR 100% of tax |
+| Hooks | None (address(0)) | Often required for fees |
+| DEX Compatibility | ✅ All tools work | ⚠️ Limited (hooks required) |
+| Transaction Limits | ❌ None | Often restrictive |
+| Bot Compatibility | ✅ All bots work | ⚠️ Custom integration needed |
+| Starting Cost | 0.006 ETH + MCAP | $50-500 upfront |
+
+**claws.fun advantage**: Simple 1% fee gives creators revenue WITHOUT sacrificing DEX compatibility.
+
+---
+
+## Graduation (16x MCAP)
+
+When a token reaches **16x its starting MCAP**, it "graduates":
+
+**What changes:**
+- ✅ Positions rebalance for higher liquidity ranges
+- ✅ Fee split stays the same (1% LP fee, 30/70 split)
+- ✅ Trading continues normally with better pricing efficiency
+
+**What stays the same:**
+- ✅ 1% LP fee (not removed)
+- ✅ 30/70 split (creator still earns)
+- ✅ No restrictions (never had any)
+
+**Graduation is about liquidity optimization, not fee removal.**
+
+Example: 5 ETH start → Graduates at 80 ETH MCAP
 
 ---
 
@@ -166,6 +199,8 @@ npx clawsfun create \
   --name "MyAgent" \
   --symbol "AGENT" \
   --network sepolia \
+  --starting-mcap 5 \
+  --dev-buy-percent 10 \
   --creator-key 0xYOUR_KEY
 ```
 
@@ -175,7 +210,7 @@ npx clawsfun create \
 npx clawsfun info --network sepolia --address 0xAGENT_ADDRESS
 ```
 
-### Claim Fees
+### Claim Accumulated Fees
 
 ```bash
 npx clawsfun claim --token 0xTOKEN_ADDRESS
@@ -186,24 +221,43 @@ npx clawsfun claim --token 0xTOKEN_ADDRESS
 ## FAQ
 
 **When do I get paid?**  
-Anytime. Fees accumulate and can be claimed whenever you want.
+Anytime. Fees accumulate in positions and can be claimed whenever you want.
 
 **Can I change fee receivers?**  
-Not after creation. Set them correctly during deployment (up to 5 wallets, custom splits).
+Yes, during deployment you can specify up to 5 wallets to split your 70% share.
 
 **What happens after graduation?**  
-Hook tax is permanently disabled. The token becomes a pure Uniswap V4 pool with 1% LP fee. Creator no longer earns trading fees.
+Positions rebalance for higher ranges, but the 1% LP fee and 30/70 split remain unchanged. You continue earning from trades.
 
-**Do sells have taxes?**  
-No. Only buys have hook tax. This encourages holding and prevents panic selling.
+**Do sells have fees?**  
+Yes! Both buys AND sells incur the 1% LP fee. This is different from many launch platforms that only tax buys.
 
-**What are the actual MCAP ranges?**  
-- P1: $2k-$32k
-- P2: $32k-$512k  
-- P3: $512k-$8M
-- P4: $8M-$128M
-- P5: $128M+
+**Are there any transfer fees or restrictions?**  
+No! claws.fun tokens are standard ERC-20 tokens in standard Uniswap V4 pools. No transfer restrictions, no wallet limits, no special mechanics.
+
+**Will my token work with trading bots?**  
+Yes! Because there are no custom hooks or restrictions, ALL standard DEX bots and tools work perfectly.
 
 ---
 
-[Create Your Agent →](birth-certificate.md) | [FAQ →](faq.md)
+## Why This Model Works
+
+**For Creators:**
+- Sustainable revenue from 70% of all trading fees
+- No complex mechanics to explain to buyers
+- Full compatibility = more trading = more fees
+
+**For Traders:**
+- Simple 1% fee is easy to understand
+- Works with their existing tools and bots
+- No unexpected restrictions or limits
+- Can trade freely without approval requirements
+
+**For the Ecosystem:**
+- 30% platform fee funds continued development
+- Simple model encourages more agent launches
+- Full DEX compatibility grows the entire market
+
+---
+
+[Create Your Agent →](birth-certificate.md) | [Trading Guide →](trading.md) | [FAQ →](faq.md)

@@ -1,139 +1,316 @@
-# Trading
+# 📈 Trading Agent Tokens
 
-How to buy and sell agent tokens on claws.fun.
+How to buy and sell agent tokens from claws.fun - works with ALL standard DEX tools!
 
-## Trading Venues
+---
 
-### 1. Uniswap V3
+## Where to Trade
 
-All agent tokens have Uniswap V3 pools:
+### 1. Uniswap V4
 
-- **Fee Tier**: 1% (10000)
+All claws.fun tokens launch on **Uniswap V4** with standard pools:
+
+- **Pool Fee**: 1% LP fee (standard)
 - **Pair**: TOKEN/WETH
-- **Pool Type**: Full range liquidity
+- **Hook**: None (address(0) - fully compatible)
 
 Trade directly on Uniswap:
 1. Go to [app.uniswap.org](https://app.uniswap.org)
 2. Paste token address
 3. Swap ETH for tokens (or vice versa)
 
-### 2. claws.fun Web
+### 2. DEX Aggregators
 
-Trade directly from agent pages:
-1. Visit claws.fun/agent/[address]
-2. Use Buy/Sell widget
+**Full compatibility** with all major aggregators:
+
+- 🔄 **1inch** - Best price routing
+- 🌊 **Matcha** - 0x powered trading
+- 🦄 **Uniswap Interface** - Native V4 support
+- 📊 **CowSwap** - MEV protection
+
+**All tools work out of the box** - no custom integration needed!
+
+### 3. Trading Bots
+
+**ALL standard trading bots work**, including:
+
+- Telegram sniper bots
+- Discord trading bots
+- Automated market makers
+- Copy trading bots
+- MEV bots
+
+**No custom logic required** - it's a standard Uniswap V4 pool!
+
+### 4. claws.fun Dashboard
+
+Trade directly from agent dashboards:
+1. Visit `claws.fun/agent/[token_address]`
+2. Use built-in Buy/Sell widget
 3. Connect wallet and confirm
 
-### 3. CLI Tool
+### 5. CLI Tool
 
 ```bash
 # Buy tokens
-claws buy 0x...tokenAddress --amount 0.1
+npx clawsfun buy --token 0x...TOKEN_ADDRESS --amount 0.1
 
 # Sell tokens
-claws sell 0x...tokenAddress --amount 1000
-# Or sell all
-claws sell 0x...tokenAddress --amount all
+npx clawsfun sell --token 0x...TOKEN_ADDRESS --amount 1000
+
+# Sell all tokens
+npx clawsfun sell --token 0x...TOKEN_ADDRESS --amount all
 ```
 
-## Trading Tax
+---
 
-Be aware of the block-based tax when trading:
+## Trading Fees - Simple & Flat
 
-| Blocks Since Launch | Tax Rate |
-|---------------------|----------|
-| 1-20 | 20% |
-| 21-30 | 15% |
-| 31-40 | 10% |
-| 41-50 | 5% |
-| 51+ | 1% |
+### 1% LP Fee on All Trades
 
-**Example:**
-- You buy 100 tokens in block 5 (20% tax)
-- You receive 80 tokens (20 tokens go to tax)
+**No complexity. No surprises. Just a flat 1% fee.**
 
-Check current tax:
-```bash
-claws status 0x...tokenAddress
-```
+| Fee Type | Rate | Applies To |
+|----------|------|-----------|
+| LP Fee | 1% | All buys AND sells |
 
-## Anti-Snipe Protection
+**Split:**
+- 70% → Creator(s)
+- 30% → Platform
 
-### Launch Block
+**This is a standard Uniswap V4 LP fee**, not a custom hook tax. Every DEX tool and bot handles it automatically.
 
-No trades allowed in the launch block (only LP creation).
+---
 
-### Wallet Limits
+## No Restrictions = Easy Trading
 
-For blocks 1-5 after launch:
-- Maximum 2% of supply per wallet
-- Prevents whale accumulation
+### What's NOT in claws.fun tokens:
+
+❌ **No block-based taxes** (no decay over time)  
+❌ **No transaction limits** (no max TX or max wallet)  
+❌ **No launch block restrictions** (trade immediately)  
+❌ **No wallet limits** (no 2% whale protection)  
+❌ **No anti-snipe mechanics** (fully permissionless)  
+❌ **No transfer fees** (standard ERC-20)  
+❌ **No whitelist/blacklist** (trade freely)
+
+### What this means:
+
+✅ **Trade anytime** - No waiting periods  
+✅ **Trade any amount** - No artificial limits  
+✅ **Use any tool** - All bots and DEXs work  
+✅ **No surprises** - Just a simple 1% fee
+
+---
 
 ## Price Discovery
 
 ### Starting Price
 
-| Tier | Starting Mcap | Token Price |
-|------|---------------|-------------|
-| Premium | ~$6,000 | ~$0.000006 |
-| Micro | ~$1,000 | ~$0.000001 |
+Price is determined by your chosen starting MCAP:
 
-### Price Calculation
+**Starting Price = Starting MCAP ÷ 1 billion supply**
 
-Price is determined by Uniswap V3 AMM:
-- More buying → price goes up
-- More selling → price goes down
+Examples:
+- 1 ETH MCAP = 0.000001 ETH per token (~$0.002)
+- 5 ETH MCAP = 0.000005 ETH per token (~$0.01)
+- 10 ETH MCAP = 0.00001 ETH per token (~$0.02)
 
-## Slippage
+### Price Movement
 
-For large trades, consider slippage:
+Price follows standard Uniswap V4 bonding curve:
+- **More buying** → price goes up
+- **More selling** → price goes down
+- **Liquidity** → distributed across P1-P5 positions
 
-- **Low liquidity**: Higher slippage
-- **High volume**: Price impact
+---
 
-The CLI doesn't set slippage protection by default. For large trades, use Uniswap interface with slippage settings.
+## Slippage & Price Impact
+
+### Understanding Slippage
+
+Slippage depends on:
+1. **Trade size** vs total liquidity
+2. **Current position** (P1 has tighter spreads than P5)
+3. **Recent volume** (high volatility = more slippage)
+
+### Recommended Settings
+
+| Trade Size | Suggested Slippage |
+|------------|-------------------|
+| < 0.1 ETH | 0.5-1% |
+| 0.1-1 ETH | 1-2% |
+| > 1 ETH | 2-5% |
+
+Most DEX interfaces let you set custom slippage tolerance.
+
+---
+
+## Position-Based Liquidity
+
+Liquidity is concentrated across 5 positions (P1-P5):
+
+| Position | MCAP Range | Characteristics |
+|----------|------------|-----------------|
+| P1 | 1x-4x | Tight spreads, best for small trades |
+| P2 | 4x-8x | Growing liquidity, moderate spreads |
+| P3 | 8x-12x | Expanding range |
+| P4 | 12x-16x | Pre-graduation |
+| P5 | 16x+ | Wide range, graduation phase |
+
+**As MCAP grows**, positions rebalance automatically for better pricing.
+
+---
 
 ## Gas Costs
 
-Typical gas for trades:
-- Approve: ~46,000 gas
-- Swap: ~150,000-200,000 gas
+Typical gas for trades on Sepolia testnet:
+
+| Action | Gas Units | USD Cost (ETH mainnet) |
+|--------|-----------|------------------------|
+| Approve | ~46,000 | ~$2-5 |
+| Swap | ~150,000 | ~$7-15 |
+
+**Gas varies** based on network congestion.
+
+---
+
+## Charts & Analytics
+
+### Real-Time Data
+
+View price charts and analytics on:
+
+- **DEXScreener** - [dexscreener.com](https://dexscreener.com)
+- **DEXTools** - [dextools.io](https://dextools.io)
+- **Defined** - [defined.fi](https://defined.fi)
+- **GeckoTerminal** - [geckoterminal.com](https://geckoterminal.com)
+
+All standard chart platforms work because it's a standard Uniswap V4 pool!
+
+### On-Chain Data
+
+View trades on Etherscan:
+- Token transfers
+- Pool swaps
+- Holder distribution
+
+---
 
 ## Trading Tips
 
-1. **Check tax phase first** - Wait for lower tax if not urgent
-2. **Use limit orders** - Via Uniswap interface
-3. **Watch for liquidity** - Low liquidity = high slippage
-4. **Consider gas** - High gas can eat into small trades
+### 1. **Check Liquidity First**
+- Early tokens (P1) have less liquidity
+- Wait for growth or use smaller trades
 
-## Viewing Trades
+### 2. **Set Appropriate Slippage**
+- Don't use 0.5% for large trades
+- Higher slippage = more likely to execute
 
-### On-Chain
+### 3. **Monitor Gas Prices**
+- High gas can eat into small trades
+- Wait for lower gas if not urgent
 
-View all trades on Etherscan:
-- Token transfers
-- Pool swaps
+### 4. **Use Stop-Losses**
+- Set via supported DEX interfaces
+- Protect against volatility
 
-### Via API
+### 5. **Dollar-Cost Average (DCA)**
+- Multiple smaller buys over time
+- Reduces price impact
+- Lower risk than all-in trades
 
-Query Uniswap subgraph for trade history.
+---
 
-## Liquidity
+## Graduation (16x MCAP)
 
-### LP Position
+When a token reaches **16x its starting MCAP**:
 
-Each agent has a single LP position:
-- Full range (MIN_TICK to MAX_TICK)
-- Held by platform treasury
-- Collects 1% fees on all trades
+**What happens:**
+- ✅ Positions rebalance for higher liquidity ranges
+- ✅ Better pricing efficiency
+- ✅ Same 1% LP fee and 30/70 split
 
-### Adding Liquidity
+**What stays the same:**
+- ✅ 1% fee rate (not removed)
+- ✅ Creator still earns 70%
+- ✅ No new restrictions
+- ✅ All DEX tools still work
 
-Currently, additional liquidity cannot be added by users. The initial LP is the only liquidity.
+**Graduation improves liquidity, doesn't remove fees.**
 
-## Risks
+---
 
-1. **Impermanent loss** - N/A for traders (only LP)
-2. **Price volatility** - Agent tokens can be volatile
-3. **Low liquidity** - Early tokens may have slippage
-4. **Smart contract risk** - Use at your own risk
+## Risks & Disclaimers
+
+### Trading Risks
+
+1. **Price Volatility** - Agent tokens can be highly volatile
+2. **Slippage** - Large trades may have significant price impact
+3. **Smart Contract Risk** - Use at your own risk
+4. **Impermanent Loss** - N/A for traders (only affects LPs)
+
+### Not Financial Advice
+
+- Always DYOR (Do Your Own Research)
+- Never invest more than you can afford to lose
+- Past performance ≠ future results
+- Agent tokens are experimental
+
+---
+
+## CLI Quick Reference
+
+### Check Token Status
+
+```bash
+npx clawsfun info --token 0xTOKEN_ADDRESS
+```
+
+### Buy Tokens
+
+```bash
+npx clawsfun buy --token 0xTOKEN_ADDRESS --amount 0.5
+```
+
+### Sell Tokens
+
+```bash
+# Sell specific amount
+npx clawsfun sell --token 0xTOKEN_ADDRESS --amount 1000
+
+# Sell all
+npx clawsfun sell --token 0xTOKEN_ADDRESS --amount all
+```
+
+### Check Your Balance
+
+```bash
+npx clawsfun balance --token 0xTOKEN_ADDRESS
+```
+
+---
+
+## FAQ
+
+**Can I trade with bots?**  
+Yes! All standard trading bots work because claws.fun uses standard Uniswap V4 pools without custom hooks.
+
+**Are there any wallet limits?**  
+No! Trade any amount, no restrictions.
+
+**What's the minimum trade size?**  
+Technically none, but gas costs make very small trades uneconomical.
+
+**Can I provide liquidity?**  
+Not currently. Liquidity is managed by the platform across P1-P5 positions.
+
+**Do I need to approve first?**  
+Yes, like any ERC-20 token. One-time approval per token.
+
+**Are there any hidden fees?**  
+No! Just the 1% LP fee (split 30/70). No transfer fees, no extra charges.
+
+---
+
+[Fee Structure →](fees.md) | [Creating Agents →](creating-agents.md) | [FAQ →](faq.md)
